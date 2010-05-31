@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" width="192px" height="320px" viewBox="-1 -1 12 20">
+<g id="abcdef" style="fill-rule: evenodd; stroke: rgb(255, 255, 255); stroke-width: 0.25; stroke-opacity: 1; stroke-linecap: butt; stroke-linejoin: miter;">
+  <polygon id="g" points="4,7 5,6 6,7 5,8" fill="#FF0000"/>
+  <polygon id="h" points="4,11 5,10 6,11 5,12" fill="#FF0000"/>
+</g>
+</svg>

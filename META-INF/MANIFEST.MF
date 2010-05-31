@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Pomodoro Timer for Eclipse
+Bundle-SymbolicName: pomodoro4eclipse;singleton:=true
+Bundle-Version: 1.0
+Bundle-Activator: pomodoro.PomodoroPlugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: lib/miglayout-3.7-swt.jar,
+ .,
+ lib/scala-library.jar

@@ -1,0 +1,8 @@
+bin
+.settings/ch.epfl.lamp.sdt.core.prefs
+.scala_dependencies
+images/*.png
+images/*Y*.svg
+images/*G*.svg
+images/*R*.svg
+

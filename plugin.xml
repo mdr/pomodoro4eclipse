@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Pomodoro"
+            id="pomodoro">
+      </category>
+      <view
+            name="Pomodoro"
+            icon="icons/hourglass.png"
+            category="pomodoro"
+            class="pomodoro.views.PomodoroView"
+            id="pomodoro.views.PomodoroView">
+      </view>
+   </extension>
+
+   <extension point="org.eclipse.core.runtime.preferences">
+	 <initializer class="pomodoro.PreferenceInitializer"/>
+   </extension>
+   
+  <extension point="org.eclipse.ui.bindings">
+      <key
+            sequence="M2+M3+Q M2+P"
+            commandId="org.eclipse.ui.views.showView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+            <parameter 
+            	id="org.eclipse.ui.views.showView.viewId"
+            	value="pomodoro.views.PomodoroView"/>
+      </key>
+   </extension>
+
+</plugin>
