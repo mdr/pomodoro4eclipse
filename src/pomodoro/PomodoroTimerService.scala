@@ -16,18 +16,17 @@ case object NotRunning extends PomodoroState {
   val targetTimeOption = None
 }
 
-
-class PomodoroTimerService(initialDuration: Int/* minutes */, initialPomodoroState: PomodoroState) extends BasicListenable  {
+class PomodoroTimerService(initialDuration: Int/* minutes */, initialPomodoroState: PomodoroState) extends BasicListenable {
   require(initialDuration > 0 && initialDuration <= 60)
 
   private var pomodoroState_ : PomodoroState = initialPomodoroState
 
   private var pomodoroDuration_ : Minutes = initialDuration
-  
+
   private var currentTimerRunnable: Option[Runnable] = None
 
   pomodoroState.targetTimeOption foreach startTimerRunnable
-  
+
   def timeRemaining: Millis = pomodoroState.targetTimeOption match {
     case Some(targetTime) => targetTime - System.currentTimeMillis
     case None => pomodoroDuration * 60 * 1000
@@ -36,7 +35,7 @@ class PomodoroTimerService(initialDuration: Int/* minutes */, initialPomodoroSta
   def pomodoroDuration = pomodoroDuration_
 
   def pomodoroDuration_=(minutes: Minutes) {
-	require(pomodoroState == NotRunning)
+    require(pomodoroState == NotRunning)
     pomodoroDuration_ = minutes
     signalPomodoroDurationChanged(pomodoroDuration)
     signalUpdateEvent(timeRemaining, pomodoroState)
@@ -50,7 +49,7 @@ class PomodoroTimerService(initialDuration: Int/* minutes */, initialPomodoroSta
     pomodoroState_ = InPomodoro(targetTime)
     startTimerRunnable(targetTime)
   }
-  
+
   def startTimerRunnable(targetTime: Millis) {
     require(currentTimerRunnable.isEmpty)
     val timerRunnable = makeTimerRunnable()
@@ -58,16 +57,6 @@ class PomodoroTimerService(initialDuration: Int/* minutes */, initialPomodoroSta
     signalPomodoroStarted(targetTime)
     signalUpdateEvent(timeRemaining, pomodoroState)
     Display.getDefault.timerExec(100, timerRunnable)
-  }
-
-  def stopPomodoro() {
-    require(currentTimerRunnable.isDefined)
-    for (timerRunnable <- currentTimerRunnable)
-      Display.getDefault.timerExec(-1, timerRunnable)
-    currentTimerRunnable = None
-    pomodoroState_ = NotRunning
-    signalPomodoroStopped()
-    signalUpdateEvent(timeRemaining, pomodoroState)
   }
 
   def makeTimerRunnable(): Runnable = new Runnable() {
@@ -86,6 +75,21 @@ class PomodoroTimerService(initialDuration: Int/* minutes */, initialPomodoroSta
     }
   }
 
+  def stopPomodoro() {
+    internalStop()
+    signalPomodoroStopped()
+    signalUpdateEvent(timeRemaining, pomodoroState)
+  }
+
+  def dispose() = internalStop()
+
+  private def internalStop() {
+    for (timerRunnable <- currentTimerRunnable)
+      Display.getDefault.timerExec(-1, timerRunnable)
+    currentTimerRunnable = None
+    pomodoroState_ = NotRunning
+  }
+
 }
 
 trait BasicListenable {
@@ -95,9 +99,9 @@ trait BasicListenable {
     def updated(timeRemaining: Millis, pomodoroState: PomodoroState) {}
 
     def pomodoroStarted(targetTime: Millis) {}
-    
+
     def pomodoroStopped() {}
-    
+
     def pomodoroComplete() {}
 
     def pomodoroDurationChanged(duration: Minutes) {}
@@ -113,9 +117,9 @@ trait BasicListenable {
   protected def signalUpdateEvent(timeRemaining: Millis, pomodoroState: PomodoroState) = listeners foreach { _.updated(timeRemaining, pomodoroState) }
 
   protected def signalPomodoroStarted(targetTime: Millis) = listeners foreach { _.pomodoroStarted(targetTime) }
-  
+
   protected def signalPomodoroStopped() = listeners foreach { _.pomodoroStopped }
-  
+
   protected def signalPomodoroComplete() = listeners foreach { _.pomodoroComplete }
 
   protected def signalPomodoroDurationChanged(duration: Minutes) = listeners foreach { _.pomodoroDurationChanged(duration) }

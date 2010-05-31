@@ -27,7 +27,7 @@ class PomodoroPlugin extends AbstractUIPlugin {
 
   override def stop(context: BundleContext) {
     PomodoroPlugin.pluginOpt = None
-    pomodoroTimerServiceOption foreach { _.stopPomodoro() }
+    pomodoroTimerServiceOption foreach { _.dispose() }
     pomodoroTimerServiceOption = None
     super.stop(context)
   }
