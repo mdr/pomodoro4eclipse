@@ -44,6 +44,6 @@ object PomodoroPlugin {
 
   var pomodoroTimerServiceOption: Option[PomodoroTimerService] = None
 
-  def preferencesNode = Platform.getPreferencesService.getRootNode.node(InstanceScope.SCOPE).node(PomodoroPlugin.PLUGIN_ID)
+  def preferencesNode = Platform.getPreferencesService.getRootNode.node(ConfigurationScope.SCOPE).node(PomodoroPlugin.PLUGIN_ID)
 
 }

@@ -7,7 +7,7 @@ class PreferenceInitializer extends AbstractPreferenceInitializer {
   import PreferenceConstants._
 
   def initializeDefaultPreferences() {
-    val node = new DefaultScope().getNode(PomodoroPlugin.PLUGIN_ID)
+    val node = new ConfigurationScope().getNode(PomodoroPlugin.PLUGIN_ID)
     node.put(POMODORO_DURATION, DEFAULT_POMODORO_DURATION.toString)
     node.put(ZOOM_ON_POMODORO_COMPLETE, DEFAULT_ZOOM_ON_POMODORO_COMPLETE.toString)
     node.put(DIGIT_SIZE, DEFAULT_DIGIT_SIZE)
