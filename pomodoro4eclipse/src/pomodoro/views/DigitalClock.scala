@@ -18,6 +18,7 @@ case class Digits(m1: Int, m2: Int, s1: Int, s2: Int) {
   val minutes = m1 * 10 + m2
 
 }
+
 sealed trait DigitSize { val code: String; val preferenceKey: String }
 case object Large extends DigitSize { val code = "L"; val preferenceKey = "Large" }
 case object Medium extends DigitSize { val code = "M"; val preferenceKey = "Medium" }
@@ -89,6 +90,7 @@ class DigitalClock(parent: Composite, initialDigitSize: DigitSize, initialDigits
         throw new RuntimeException("Cannot load image " + resourceName)
       new Image(getDisplay, stream)
     }
+
     private val COLON_INDEX = 10
 
     private def digitBounds(size: DigitSize) = imagesByColour(Red, size)(0).getBounds
