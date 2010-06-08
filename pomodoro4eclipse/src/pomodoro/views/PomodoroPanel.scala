@@ -2,7 +2,7 @@ package pomodoro.views
 
 import pomodoro._
 import org.eclipse.swt.SWT
-import org.eclipse.swt.widgets.{ List => _, _ }
+import org.eclipse.swt.widgets.{ List ⇒ _, _ }
 import org.eclipse.swt.events._
 import net.miginfocom.layout._
 import net.miginfocom.swt.MigLayout
@@ -12,10 +12,10 @@ import java.math.BigDecimal
 class PomodoroPanel(parent: Composite, digitSize: DigitSize, pomodoroTimerService: PomodoroTimerService) extends Composite(parent, SWT.NONE) {
 
   private def clockColour: Colour = pomodoroTimerService.pomodoroState match {
-    case NotRunning | PomodoroComplete(_) => Green
-    case InPomodoro(_) => Yellow
+    case NotRunning | PomodoroComplete(_) ⇒ Green
+    case InPomodoro(_) ⇒ Yellow
   }
-	
+
   private val (clock, startButton, stopButton, durationSlider: Slider, listener, allWidgets) = {
 
     setLayout(new MigLayout(new LC()/*.debug(1000)*/.fillX, new AC().index(2).grow(1.0f).index(3).align("right").index(4)))
@@ -65,10 +65,10 @@ class PomodoroPanel(parent: Composite, digitSize: DigitSize, pomodoroTimerServic
       override def widgetSelected(e: SelectionEvent) = pomodoroTimerService.stopPomodoro()
     })
 
-    object Listener extends pomodoroTimerService.Listener { 
-      override def updated(timeRemaining: Millis, pomodoroState: PomodoroState) = updateWidgets(timeRemaining, pomodoroState) 
+    object Listener extends pomodoroTimerService.Listener {
+      override def updated(timeRemaining: Millis, pomodoroState: PomodoroState) = updateWidgets(timeRemaining, pomodoroState)
     }
-    
+
     pomodoroTimerService.addListener(Listener)
     val allWidgets = List(clock, startButton, stopButton, separator, sliderLabel, DurationSlider)
     (clock, startButton, stopButton, DurationSlider, Listener, allWidgets)
@@ -83,11 +83,11 @@ class PomodoroPanel(parent: Composite, digitSize: DigitSize, pomodoroTimerServic
 
   private def updateWidgets(timeRemaining: Millis, pomodoroState: PomodoroState) {
     pomodoroState match {
-      case InPomodoro(_) | PomodoroComplete(_) =>
+      case InPomodoro(_) | PomodoroComplete(_) ⇒
         startButton.setEnabled(false)
         stopButton.setEnabled(true)
         durationSlider.setEnabled(false)
-      case NotRunning =>
+      case NotRunning ⇒
         stopButton.setEnabled(false)
         startButton.setEnabled(true)
         durationSlider.setEnabled(true)

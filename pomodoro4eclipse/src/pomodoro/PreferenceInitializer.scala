@@ -26,11 +26,11 @@ object PreferenceConstants {
 
   val DIGIT_SIZE = "pomodoro.digitSize"
   val DEFAULT_DIGIT_SIZE = "Large"
-	   
+
   /**
    * Not a preference, used to allow the pomodoro timer to survive a restart of Eclipse
    */
-  val TARGET_TIME = "pomodoro.targetTime"	  
+  val TARGET_TIME = "pomodoro.targetTime"
   val DEFAULT_TARGET_TIME = -1L
 
 }

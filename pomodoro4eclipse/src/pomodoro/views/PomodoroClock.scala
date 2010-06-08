@@ -1,7 +1,7 @@
 package pomodoro.views
 
 import pomodoro._
-import org.eclipse.swt.widgets.{ List => _, _ }
+import org.eclipse.swt.widgets.{ List ⇒ _, _ }
 import org.eclipse.swt.SWT
 import org.eclipse.swt.graphics._
 import org.eclipse.swt.layout._
@@ -71,14 +71,14 @@ class DigitalClock(parent: Composite, initialDigitSize: DigitSize, initialDigits
     Images.dispose()
     super.dispose()
   }
-  
+
   object Images {
     // TODO: Initialise images statically? use red?
 
     private val imagesByColour: Map[(Colour, DigitSize), List[Image]] =
       (for {
-        colour <- List(Red, Green, Yellow)
-        size <- List(Large, Medium)
+        colour ← List(Red, Green, Yellow)
+        size ← List(Large, Medium)
         val images = "0123456789d" map { loadImage(_, colour, size) } toList
       } yield ((colour, size) -> images)) toMap
 

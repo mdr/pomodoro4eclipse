@@ -11,16 +11,16 @@ object Main {
     val shell = new Shell(display)
     shell.setText("Pomodoro")
     shell.setLayout(new FillLayout)
-    
-    val panel = new PomodoroPanel(shell, Large, new PomodoroTimerService(25, NotRunning)) 
-//      def endOfPomodoroReached() {
-//        println("End of Pomodoro reached!")
-//      }
-//      def getInitialPomodoroDuration() = 25
-//      def setPomodoroDuration(duration: Int) {
-//    	  println("Setting pomodoro duration = " + duration)
-//      }
-//      def setTitle(s: String) = shell.setText(s)
+
+    val panel = new PomodoroPanel(shell, Large, new PomodoroTimerService(25, NotRunning))
+    //      def endOfPomodoroReached() {
+    //        println("End of Pomodoro reached!")
+    //      }
+    //      def getInitialPomodoroDuration() = 25
+    //      def setPomodoroDuration(duration: Int) {
+    //    	  println("Setting pomodoro duration = " + duration)
+    //      }
+    //      def setTitle(s: String) = shell.setText(s)
     shell.pack()
     shell.open()
     while (!shell.isDisposed)

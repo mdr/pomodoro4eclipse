@@ -28,8 +28,8 @@ class PomodoroTimerService(initialDuration: Int/* minutes */, initialPomodoroSta
   pomodoroState.targetTimeOption foreach startTimerRunnable
 
   def timeRemaining: Millis = pomodoroState.targetTimeOption match {
-    case Some(targetTime) => targetTime - System.currentTimeMillis
-    case None => pomodoroDuration * 60 * 1000
+    case Some(targetTime) ⇒ targetTime - System.currentTimeMillis
+    case None ⇒ pomodoroDuration * 60 * 1000
   }
 
   def pomodoroDuration = pomodoroDuration_
@@ -84,7 +84,7 @@ class PomodoroTimerService(initialDuration: Int/* minutes */, initialPomodoroSta
   def dispose() = internalStop()
 
   private def internalStop() {
-    for (timerRunnable <- currentTimerRunnable)
+    for (timerRunnable ← currentTimerRunnable)
       Display.getDefault.timerExec(-1, timerRunnable)
     currentTimerRunnable = None
     pomodoroState_ = NotRunning

@@ -26,9 +26,9 @@ class PomodoroView extends ViewPart {
 
   private def setPartNameFromPomodoroState(pomodoroState: PomodoroState) {
     val titleSuffix = pomodoroState match {
-      case InPomodoro(_) => " [In Pomodoro]"
-      case PomodoroComplete(_) => " [Complete]"
-      case NotRunning => ""
+      case InPomodoro(_) ⇒ " [In Pomodoro]"
+      case PomodoroComplete(_) ⇒ " [Complete]"
+      case NotRunning ⇒ ""
     }
     setPartName("Pomodoro" + titleSuffix)
   }
@@ -45,7 +45,7 @@ class PomodoroView extends ViewPart {
       preferencesNode.putLong(TARGET_TIME, DEFAULT_TARGET_TIME)
       preferencesNode.flush()
     }
-    
+
     override def pomodoroComplete() {
       val workbenchPage = getSite.getPage
       workbenchPage.showView(VIEW_ID)
@@ -54,7 +54,7 @@ class PomodoroView extends ViewPart {
         if (workbenchPage.getPartState(viewPartReference) != IWorkbenchPage.STATE_MAXIMIZED)
           workbenchPage.toggleZoom(viewPartReference)
     }
-    
+
     private var flushPreferencesRunnableOption: Option[Runnable] = None
 
     override def pomodoroDurationChanged(duration: Minutes) {
@@ -67,7 +67,7 @@ class PomodoroView extends ViewPart {
           flushPreferencesRunnableOption = None
         }
       }
-      for (previousFlushPreferencesRunnable <- flushPreferencesRunnableOption)
+      for (previousFlushPreferencesRunnable ← flushPreferencesRunnableOption)
         Display.getDefault.timerExec(-1, previousFlushPreferencesRunnable)
       flushPreferencesRunnableOption = Some(flushPreferencesRunnable)
       Display.getDefault.timerExec(1000, flushPreferencesRunnable)
@@ -97,8 +97,8 @@ class PomodoroView extends ViewPart {
     val useLargeDigitsAction = new Action("Large Digits", IAction.AS_RADIO_BUTTON) { override def run() = setDigitSize(Large) }
     val useMediumDigitsAction = new Action("Medium Digits", IAction.AS_RADIO_BUTTON) { override def run() = setDigitSize(Medium) }
     getDigitSizeFromPreferences match {
-      case Large => useLargeDigitsAction.setChecked(true)
-      case Medium => useMediumDigitsAction.setChecked(true)
+      case Large ⇒ useLargeDigitsAction.setChecked(true)
+      case Medium ⇒ useMediumDigitsAction.setChecked(true)
     }
 
     val dropDownMenu = getViewSite.getActionBars.getMenuManager
@@ -125,9 +125,9 @@ class PomodoroView extends ViewPart {
 
   def getDigitSizeFromPreferences =
     preferencesNode.get(DIGIT_SIZE, DEFAULT_DIGIT_SIZE) match {
-      case Large.preferenceKey => Large
-      case Medium.preferenceKey => Medium
-      case _ => Medium
+      case Large.preferenceKey ⇒ Large
+      case Medium.preferenceKey ⇒ Medium
+      case _ ⇒ Medium
     }
 
   def setFocus() = pomodoroPanelOption foreach { _.setFocus() }
