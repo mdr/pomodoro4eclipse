@@ -1,6 +1,6 @@
 package pomodoro.views
+
 import pomodoro._
-import org.eclipse.swt.widgets.Canvas
 import org.eclipse.swt.widgets.{ List => _, _ }
 import org.eclipse.swt.SWT
 import org.eclipse.swt.graphics._
@@ -27,7 +27,7 @@ case object Red extends Colour { val code = "R" }
 case object Green extends Colour { val code = "G" }
 case object Yellow extends Colour { val code = "Y" }
 
-class PomodoroClock(parent: Composite, initialDigitSize: DigitSize, initialDigits: Digits, initialColour: Colour) extends Canvas(parent, SWT.NONE) {
+class DigitalClock(parent: Composite, initialDigitSize: DigitSize, initialDigits: Digits, initialColour: Colour) extends Canvas(parent, SWT.NONE) {
 
   import Images._
 

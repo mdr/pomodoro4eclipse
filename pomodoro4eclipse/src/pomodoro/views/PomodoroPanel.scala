@@ -1,4 +1,5 @@
 package pomodoro.views
+
 import pomodoro._
 import org.eclipse.swt.SWT
 import org.eclipse.swt.widgets.{ List => _, _ }
@@ -19,7 +20,7 @@ class PomodoroPanel(parent: Composite, digitSize: DigitSize, pomodoroTimerServic
 
     setLayout(new MigLayout(new LC()/*.debug(1000)*/.fillX, new AC().index(2).grow(1.0f).index(3).align("right").index(4)))
     val digits = getTimeDigits(pomodoroTimerService.timeRemaining)
-    val clock = new PomodoroClock(this, digitSize, digits, clockColour)
+    val clock = new DigitalClock(this, digitSize, digits, clockColour)
     val clockWidth = clock.getBounds.width
     val clockHeight = clock.getBounds.height
     clock.setLayoutData(new CC().alignX("center").spanX(5).width(clockWidth + "px").height(clockHeight + "px").wrap)
@@ -98,7 +99,7 @@ class PomodoroPanel(parent: Composite, digitSize: DigitSize, pomodoroTimerServic
   private def getTimeDigits(t: Millis): Digits = {
     val positiveTime: Millis = math.abs(t)
     val allSeconds: Seconds = positiveTime / 1000
-    val minutes = math.min(/* cap at 60 to avoid problems when overflow at 100 */60, allSeconds / 60)
+    val minutes = allSeconds / 60 % 60 /* wrap at 60 to avoid problems when overflow at 100 */
     val seconds = allSeconds % 60
     val minutesPrefix = if (minutes < 10) "0" else ""
     val secondsPrefix = if (seconds < 10) "0" else ""
