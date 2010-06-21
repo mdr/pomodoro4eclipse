@@ -10,9 +10,11 @@ import net.miginfocom.swt.MigLayout
 import java.math.BigDecimal
 
 class PomodoroPanel(parent: Composite, digitSize: DigitSize, pomodoroTimerService: PomodoroTimerService) extends Composite(parent, SWT.NONE) {
+  import PomodoroPanel._
 
   private def clockColour: Colour = pomodoroTimerService.pomodoroState match {
     case NotRunning | PomodoroComplete(_) ⇒ Green
+    case InPomodoro(_) if pomodoroTimerService.timeRemaining < ONE_MINUTE ⇒ Red
     case InPomodoro(_) ⇒ Yellow
   }
 
@@ -106,5 +108,11 @@ class PomodoroPanel(parent: Composite, digitSize: DigitSize, pomodoroTimerServic
     pomodoroTimerService.removeListener(listener)
     super.dispose()
   }
+
+}
+
+object PomodoroPanel {
+
+  private val ONE_MINUTE: Long = 60 * 1000
 
 }
