@@ -16,10 +16,10 @@ class PomodoroPanel(parent: Composite, digitSize: DigitSize, pomodoroTimerServic
     case InPomodoro(_) ⇒ Yellow
   }
 
-  private val (clock, startButton, stopButton, durationSlider: Slider, listener, allWidgets) = {
+  private val (clock, startButton, durationSlider: Slider, listener, allWidgets) = {
 
-    setLayout(new MigLayout(new LC()/*.debug(1000)*/.fillX, new AC().index(2).grow(1.0f).index(3).align("right").index(4)))
-    val digits = getTimeDigits(pomodoroTimerService.timeRemaining)
+    setLayout(new MigLayout(new LC()/*.debug(1000)*/, new AC().index(2).align("right").index(3).grow(1.0f)))
+    val digits = getTimeDigits(pomodoroTimerService.timeRemaining, pomodoroComplete = false)
     val clock = new DigitalClock(this, digitSize, digits, clockColour)
     val clockWidth = clock.getBounds.width
     val clockHeight = clock.getBounds.height
@@ -27,15 +27,9 @@ class PomodoroPanel(parent: Composite, digitSize: DigitSize, pomodoroTimerServic
 
     val startButton = new Button(this, SWT.PUSH)
     startButton.setText("Start")
-    startButton.setLayoutData(new CC().sizeGroupX("button"))
-
-    val stopButton = new Button(this, SWT.PUSH)
-    stopButton.setText("Stop")
-    stopButton.setEnabled(false)
-    stopButton.setLayoutData(new CC().sizeGroupX("button"))
 
     val separator = new Label(this, SWT.NONE)
-    separator.setLayoutData(new CC().growX)
+    separator.setLayoutData(new CC())
 
     val sliderLabel = new Label(this, SWT.NONE)
     sliderLabel.setText("Duration:")
@@ -55,14 +49,15 @@ class PomodoroPanel(parent: Composite, digitSize: DigitSize, pomodoroTimerServic
       override def checkSubclass() {/* skip checks to allow subclassing */}
 
     }
-    DurationSlider.setLayoutData(new CC().alignX("right").growX(0))
+    DurationSlider.setLayoutData(new CC().alignX("right").growX)
 
     startButton.addSelectionListener(new SelectionAdapter() {
-      override def widgetSelected(e: SelectionEvent) = pomodoroTimerService.startPomodoro()
-    })
-
-    stopButton.addSelectionListener(new SelectionAdapter() {
-      override def widgetSelected(e: SelectionEvent) = pomodoroTimerService.stopPomodoro()
+      override def widgetSelected(e: SelectionEvent) = pomodoroTimerService.pomodoroState match {
+        case InPomodoro(_) | PomodoroComplete(_) ⇒
+          pomodoroTimerService.stopPomodoro()
+        case NotRunning ⇒
+          pomodoroTimerService.startPomodoro()
+      }
     })
 
     object Listener extends pomodoroTimerService.Listener {
@@ -70,8 +65,8 @@ class PomodoroPanel(parent: Composite, digitSize: DigitSize, pomodoroTimerServic
     }
 
     pomodoroTimerService.addListener(Listener)
-    val allWidgets = List(clock, startButton, stopButton, separator, sliderLabel, DurationSlider)
-    (clock, startButton, stopButton, DurationSlider, Listener, allWidgets)
+    val allWidgets = List(clock, startButton, separator, sliderLabel, DurationSlider)
+    (clock, startButton, DurationSlider, Listener, allWidgets)
   }
   updateWidgets(pomodoroTimerService.timeRemaining, pomodoroTimerService.pomodoroState)
 
@@ -83,22 +78,22 @@ class PomodoroPanel(parent: Composite, digitSize: DigitSize, pomodoroTimerServic
   private def updateWidgets(timeRemaining: Millis, pomodoroState: PomodoroState) {
     pomodoroState match {
       case InPomodoro(_) | PomodoroComplete(_) ⇒
-        startButton.setEnabled(false)
-        stopButton.setEnabled(true)
+        startButton.setText("Stop")
         durationSlider.setEnabled(false)
       case NotRunning ⇒
-        stopButton.setEnabled(false)
-        startButton.setEnabled(true)
+        startButton.setText("Start")
         durationSlider.setEnabled(true)
     }
-    clock.setDigits(getTimeDigits(timeRemaining))
+    clock.setDigits(getTimeDigits(timeRemaining, pomodoroState.isInstanceOf[PomodoroComplete]))
     clock.setColour(clockColour)
   }
 
-  private def getTimeDigits(t: Millis): Digits = {
+  private def getTimeDigits(t: Millis, pomodoroComplete: Boolean): Digits = {
     val positiveTime: Millis = math.abs(t)
     val allSeconds: Seconds = positiveTime / 1000
-    val minutes = allSeconds / 60 % 60 /* wrap at 60 to avoid problems when overflow at 100 */
+
+    val minutes = if (pomodoroComplete) allSeconds / 60 % 60 /* wrap at 60 to avoid problems when overflow at 100 */
+    else allSeconds / 60
     val seconds = allSeconds % 60
     val minutesPrefix = if (minutes < 10) "0" else ""
     val secondsPrefix = if (seconds < 10) "0" else ""
