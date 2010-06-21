@@ -76,9 +76,8 @@ class PomodoroPanel(parent: Composite, digitSize: DigitSize, pomodoroTimerServic
   updateWidgets(pomodoroTimerService.timeRemaining, pomodoroTimerService.pomodoroState)
 
   def setDigitSize(digitSize: DigitSize) {
-    //    clock.setDigitSize(digitSize)
-    //    layout(true)
-    ()
+    clock.setDigitSize(digitSize)
+    layout(true, true)
   }
 
   private def updateWidgets(timeRemaining: Millis, pomodoroState: PomodoroState) {

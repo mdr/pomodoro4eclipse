@@ -46,10 +46,16 @@ class DigitalClock(parent: Composite, initialDigitSize: DigitSize, initialDigits
     redraw()
   }
 
-  def setDigitSize(digitSize: DigitSize) {
+  def setDigitSize(implicit digitSize: DigitSize) {
     this.digitSize = digitSize
+    val (width, height) = size
+    setBounds(0, 0, width, height)
     redraw()
   }
+
+  private def size = (digitWidth * 4 + colonWidth, height)
+
+  override def computeSize(wHint: Int, hHint: Int, changed: Boolean) = new Point(digitWidth * 4 + colonWidth, height)
 
   addPaintListener(new PaintListener() {
     def paintControl(e: PaintEvent) {

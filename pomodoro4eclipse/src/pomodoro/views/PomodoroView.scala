@@ -77,11 +77,10 @@ class PomodoroView extends ViewPart {
   private def setDigitSize(digitSize: DigitSize) {
     preferencesNode.put(DIGIT_SIZE, digitSize.preferenceKey)
     preferencesNode.flush()
-
-    // TODO: Digit size changes without closing view 
-    // getSite.getPage.hideView(this)
-    // getSite.getPage.showView(PomodoroView.VIEW_ID)
-    // pomodoroPanelOption.get.setDigitSize(digitSize)
+    pomodoroPanelOption foreach { panel ⇒
+      panel.setDigitSize(digitSize)
+      panel.getParent.layout(true, true)
+    }
   }
 
   def createPartControl(parent: Composite) {
