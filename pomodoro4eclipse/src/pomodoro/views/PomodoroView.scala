@@ -21,20 +21,25 @@ class PomodoroView extends ViewPart {
   import PreferenceConstants._
 
   private var pomodoroPanelOption: Option[PomodoroPanel] = None
+  
   private var holderOption: Option[Canvas] = None
-  private val pomodoroTimerService = PomodoroPlugin.pomodoroTimerServiceOption getOrElse (throw new AssertionError("Could not find Pomodoro Timer Service"))
+  
+  private val pomodoroTimerService = PomodoroPlugin.pomodoroTimerServiceOption.getOrElse(
+    throw new AssertionError("Could not find Pomodoro Timer Service"))
 
   private def setPartNameFromPomodoroState(pomodoroState: PomodoroState) {
     val titleSuffix = pomodoroState match {
-      case InPomodoro(_) ⇒ " [In Pomodoro]"
+      case InPomodoro(_)       ⇒ " [In Pomodoro]"
       case PomodoroComplete(_) ⇒ " [Complete]"
-      case NotRunning ⇒ ""
+      case NotRunning          ⇒ ""
     }
     setPartName("Pomodoro" + titleSuffix)
   }
 
-  private object Listener extends pomodoroTimerService.Listener() {
-    override def updated(timeRemaining: Millis, pomodoroState: PomodoroState) = setPartNameFromPomodoroState(pomodoroState)
+  private object MyListener extends pomodoroTimerService.Listener() {
+    
+    override def updated(timeRemaining: Millis, pomodoroState: PomodoroState) = 
+      setPartNameFromPomodoroState(pomodoroState)
 
     override def pomodoroStarted(targetTime: Millis) {
       preferencesNode.putLong(TARGET_TIME, targetTime)
@@ -83,6 +88,10 @@ class PomodoroView extends ViewPart {
     }
   }
 
+  private def action(title: String, style: Int)(doAction: => Any) = new Action(title, style) {
+    override def run() = doAction
+  }
+  
   def createPartControl(parent: Composite) {
 
     val maximiseOnPomodoroEndAction = new Action("Maximise on Pomodoro end", IAction.AS_CHECK_BOX) {
@@ -93,10 +102,10 @@ class PomodoroView extends ViewPart {
     }
     maximiseOnPomodoroEndAction.setChecked(preferencesNode.getBoolean(ZOOM_ON_POMODORO_COMPLETE, DEFAULT_ZOOM_ON_POMODORO_COMPLETE))
 
-    val useLargeDigitsAction = new Action("Large Digits", IAction.AS_RADIO_BUTTON) { override def run() = setDigitSize(Large) }
-    val useMediumDigitsAction = new Action("Medium Digits", IAction.AS_RADIO_BUTTON) { override def run() = setDigitSize(Medium) }
+    val useLargeDigitsAction = action("Large Digits", IAction.AS_RADIO_BUTTON) { setDigitSize(Large) }
+    val useMediumDigitsAction = action("Medium Digits", IAction.AS_RADIO_BUTTON) { setDigitSize(Medium) }
     getDigitSizeFromPreferences match {
-      case Large ⇒ useLargeDigitsAction.setChecked(true)
+      case Large  ⇒ useLargeDigitsAction.setChecked(true)
       case Medium ⇒ useMediumDigitsAction.setChecked(true)
     }
 
@@ -107,7 +116,7 @@ class PomodoroView extends ViewPart {
 
     val holder = new Canvas(parent, SWT.NONE) {
       setLayout(new MigLayout(new LC()))
-      pomodoroTimerService.addListener(Listener)
+      pomodoroTimerService.addListener(MyListener)
       val pomodoroPanel = new PomodoroPanel(this, getDigitSizeFromPreferences, pomodoroTimerService)
       pomodoroPanelOption = Some(pomodoroPanel)
       pomodoroPanel.setLayoutData(new CC().growX(0.0f).growY(0.0f))
@@ -122,11 +131,11 @@ class PomodoroView extends ViewPart {
     setPartNameFromPomodoroState(pomodoroTimerService.pomodoroState)
   }
 
-  def getDigitSizeFromPreferences =
+  def getDigitSizeFromPreferences: DigitSize =
     preferencesNode.get(DIGIT_SIZE, DEFAULT_DIGIT_SIZE) match {
-      case Large.preferenceKey ⇒ Large
+      case Large.preferenceKey  ⇒ Large
       case Medium.preferenceKey ⇒ Medium
-      case _ ⇒ Medium
+      case _                    ⇒ Medium
     }
 
   def setFocus() = pomodoroPanelOption foreach { _.setFocus() }
@@ -135,7 +144,7 @@ class PomodoroView extends ViewPart {
     holderOption foreach { _.dispose() }
     holderOption = None
     pomodoroPanelOption = None
-    pomodoroTimerService.removeListener(Listener)
+    pomodoroTimerService.removeListener(MyListener)
     super.dispose()
   }
 

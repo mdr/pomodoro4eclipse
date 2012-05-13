@@ -9,7 +9,9 @@ import net.miginfocom.swt.MigLayout
 
 import java.math.BigDecimal
 
-class PomodoroPanel(parent: Composite, digitSize: DigitSize, pomodoroTimerService: PomodoroTimerService) extends Composite(parent, SWT.NONE) {
+class PomodoroPanel(parent: Composite, digitSize: DigitSize, pomodoroTimerService: PomodoroTimerService)
+    extends Composite(parent, SWT.NONE) {
+  
   import PomodoroPanel._
 
   private def clockColour: Colour = pomodoroTimerService.pomodoroState match {
@@ -20,7 +22,7 @@ class PomodoroPanel(parent: Composite, digitSize: DigitSize, pomodoroTimerServic
 
   private val (clock, startButton, durationSlider: Slider, listener, allWidgets) = {
 
-    setLayout(new MigLayout(new LC()/*.debug(1000)*/, new AC().index(2).align("right").index(3).grow(1.0f)))
+    setLayout(new MigLayout(new LC() /*.debug(1000)*/ , new AC().index(2).align("right").index(3).grow(1.0f)))
     val digits = getTimeDigits(pomodoroTimerService.timeRemaining, pomodoroComplete = false)
     val clock = new DigitalClock(this, digitSize, digits, clockColour)
     val clockWidth = clock.getBounds.width
@@ -48,7 +50,7 @@ class PomodoroPanel(parent: Composite, digitSize: DigitSize, pomodoroTimerServic
         def handleEvent(e: Event) { pomodoroTimerService.pomodoroDuration = durationSlider.getSelection }
       })
 
-      override def checkSubclass() {/* skip checks to allow subclassing */}
+      override def checkSubclass() { /* skip checks to allow subclassing */ }
 
     }
     DurationSlider.setLayoutData(new CC().alignX("right").growX)
@@ -62,13 +64,14 @@ class PomodoroPanel(parent: Composite, digitSize: DigitSize, pomodoroTimerServic
       }
     })
 
-    object Listener extends pomodoroTimerService.Listener {
-      override def updated(timeRemaining: Millis, pomodoroState: PomodoroState) = updateWidgets(timeRemaining, pomodoroState)
+    object MyListener extends pomodoroTimerService.Listener {
+      override def updated(timeRemaining: Millis, pomodoroState: PomodoroState) =
+        updateWidgets(timeRemaining, pomodoroState)
     }
 
-    pomodoroTimerService.addListener(Listener)
+    pomodoroTimerService.addListener(MyListener)
     val allWidgets = List(clock, startButton, separator, sliderLabel, DurationSlider)
-    (clock, startButton, DurationSlider, Listener, allWidgets)
+    (clock, startButton, DurationSlider, MyListener: pomodoroTimerService.Listener, allWidgets)
   }
   updateWidgets(pomodoroTimerService.timeRemaining, pomodoroTimerService.pomodoroState)
 

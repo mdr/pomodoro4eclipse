@@ -6,3 +6,4 @@ pomodoro4eclipse/images/*Y*.svg
 pomodoro4eclipse/images/*G*.svg
 pomodoro4eclipse/images/*R*.svg
 target
+.cache
