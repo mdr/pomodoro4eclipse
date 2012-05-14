@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>pomodoro4eclipse.parent</artifactId>
@@ -11,16 +11,85 @@
   <artifactId>pomodoro4eclipse</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
-    <dependencies>
-      <dependency>
-        <groupId>com.miglayout</groupId>
-        <artifactId>miglayout</artifactId>
-        <version>3.7.3</version>
-     </dependency>
+
+  <properties>
+    <miglayout.version>3.7.4</miglayout.version>
+  </properties>
+
+  <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.5</version>
+      <groupId>com.miglayout</groupId>
+      <artifactId>miglayout</artifactId>
+      <version>${miglayout.version}</version>
     </dependency>
   </dependencies>
+  <build>
+    <sourceDirectory>${basedir}/src</sourceDirectory>
+    <testSourceDirectory>${basedir}/test</testSourceDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.scala-tools</groupId>
+        <artifactId>maven-scala-plugin</artifactId>
+        <version>2.15.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>add-source</goal>
+              <goal>compile</goal>
+              <goal>testCompile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.4</version>
+        <executions>
+	  <execution>
+            <id>copy</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.miglayout</groupId>
+                  <artifactId>miglayout</artifactId>
+                  <version>${miglayout.version}</version>
+                  <outputDirectory>${basedir}/lib</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+		  <groupId>org.scala-lang</groupId>
+		  <artifactId>scala-library</artifactId>
+		  <version>${scala.version}</version>
+		  <outputDirectory>${basedir}/lib</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>2.4.1</version>
+        <configuration>
+          <excludeDefaultDirectories>true</excludeDefaultDirectories>
+          <filesets>
+            <fileset>
+              <directory>./</directory>
+              <includes>
+                <include>lib/**/*</include>
+                <include>lib</include>
+                <include>target/**/*</include>
+                <include>target</include>
+              </includes>
+              <followSymlinks>false</followSymlinks>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

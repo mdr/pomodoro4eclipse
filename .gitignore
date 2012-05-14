@@ -1,4 +1,5 @@
 pomodoro4eclipse/bin
+pomodoro4eclipse/lib
 pomodoro4eclipse/.settings/ch.epfl.lamp.sdt.core.prefs
 pomodoro4eclipse/.scala_dependencies
 pomodoro4eclipse/images/*.png

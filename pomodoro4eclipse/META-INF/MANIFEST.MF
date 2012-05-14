@@ -8,6 +8,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-ClassPath: lib/miglayout-3.7-swt.jar,
- .,
- lib/scala-library.jar
+Bundle-ClassPath: .,
+ lib/miglayout-3.7.4.jar,
+ lib/scala-library-2.9.2.jar
